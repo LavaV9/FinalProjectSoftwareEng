@@ -3,7 +3,8 @@ from typing import Optional
 from pydantic import BaseModel
 from .order_details import OrderDetail
 
-
+#Note from Pranav: I changed or orders a bit for payment / customer stuff
+#  Make sure to include the changes I made in schemas, controller, and routers
 
 class OrderBase(BaseModel):
     customer_name: str
