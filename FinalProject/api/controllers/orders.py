@@ -3,11 +3,16 @@ from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from sqlalchemy.exc import SQLAlchemyError
 
-
+#Austin Note: added customer_id, order_date, tracking_number, status, total_price
 def create(db: Session, request):
     new_item = model.Order(
-        customer_name=request.customer_name,
-        description=request.description
+        #customer_name=request.customer_name,
+        description=request.description,
+        customer_id=request.customer_id,
+        order_date=request.order_date if request.order_date else datetime.utcnow(),
+        tracking_number=request.tracking_number,
+        status=request.status if request.status else "pending",
+        total_price=request.total_price,
     )
 
     try:
