@@ -8,7 +8,8 @@ from ..schemas import sandwiches as schema
 def create(db: Session, request: schema.SandwichCreate):
     new_item = model.Sandwich(
         sandwich_name=request.sandwich_name,
-        price=request.price
+        price=request.price,
+        resource_id = request.resource_id
         # Note: resource_id is not used directly here unless you're linking during creation
     )
 

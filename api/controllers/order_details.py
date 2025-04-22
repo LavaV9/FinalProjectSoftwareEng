@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
-from ..models import order_details as model
+from ..models import order_details as model, sandwiches, resources
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -12,6 +12,31 @@ def create(db: Session, request):
     )
 
     try:
+        sandwich = db.query(sandwiches.Sandwich).filter(
+            sandwiches.Sandwich.id == request.sandwich_id
+        ).first()
+
+        if not sandwich:
+            raise(HTTPException(status_code=404, detail="Sandwich not found"))
+
+        res = db.query(resources.Resource).filter(
+            resources.Resource.id == sandwich.resource_id
+        ).first()
+
+        if not res:
+            raise HTTPException(status_code=404, detail="Associated resource not found")
+
+        required_total = sandwich.resource_amount * request.amount
+
+        if res.amount < required_total:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Insufficient stock for resource '{res.item}'"
+            )
+
+        res.amount -= required_total
+
+
         db.add(new_item)
         db.commit()
         db.refresh(new_item)

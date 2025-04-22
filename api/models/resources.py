@@ -9,5 +9,4 @@ class Resource(Base):
     item = Column(String(100), unique=True, nullable=False)
     amount = Column(Integer, nullable=False, server_default='0')
 
-    sandwich_id = Column(Integer, ForeignKey("sandwiches.id"))
-    sandwich = relationship("Sandwich", back_populates="resources")
+    sandwiches = relationship("Sandwich", back_populates="resource")
