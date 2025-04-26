@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from ..dependencies import database
 from ..models import order_details as model, orders as orders_model, promotions as promotions_model
 from datetime import datetime
+from sqlalchemy import and_
 
 router = APIRouter(
     prefix="/utility",
@@ -61,11 +62,9 @@ def apply_promo_code(order_id: int, promo_code: str, db: Session = Depends(datab
         if not promo:
             raise HTTPException(status_code=404, detail="Promo code not found")
 
-        # Check expiration
         if promo.expiration_date < datetime.utcnow().date():
             raise HTTPException(status_code=400, detail="Promo code has expired")
 
-        # Apply discount
         discount_amount = (promo.discount_percentage / 100) * original_price
         new_price = original_price - discount_amount
 
@@ -80,3 +79,24 @@ def apply_promo_code(order_id: int, promo_code: str, db: Session = Depends(datab
         "new_price_after_discount": round(new_price, 2),
     }
 
+@router.get("/orders_in_date_range", summary="Get orders within a specific date range")
+def get_orders_in_date_range(
+    start_date: datetime,
+    end_date: datetime,
+    db: Session = Depends(database.get_db)
+):
+    try:
+        orders = db.query(orders_model.Order).filter(
+            and_(
+                orders_model.Order.order_date >= start_date,
+                orders_model.Order.order_date <= end_date
+            )
+        ).all()
+
+        if not orders:
+            raise HTTPException(status_code=404, detail="No orders found in the given date range")
+
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+    return {"orders": orders}
