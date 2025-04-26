@@ -22,6 +22,7 @@ class OrderDetail(OrderDetailBase):
     id: int
     order_id: int
     sandwich: Sandwich = None
+    price: Optional[float] = None # calculated field we will do later through grabbing orders.sandwhich.price * amount
 
     class ConfigDict:
         from_attributes = True

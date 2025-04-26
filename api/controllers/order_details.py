@@ -50,21 +50,37 @@ def create(db: Session, request):
 def read_all(db: Session):
     try:
         result = db.query(model.OrderDetail).all()
+        # dont modify just access when needed
+        response = []
+        for item in result:
+            response.append({
+                "id": item.id,
+                "order_id": item.order_id,
+                "price": item.price,
+                "sandwich_id": item.sandwich_id,
+                "sandwich": item.sandwich,
+                "amount": item.amount
+            })
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-    return result
+    return response
 
 
 def read_one(db: Session, item_id):
-    try:
-        item = db.query(model.OrderDetail).filter(model.OrderDetail.id == item_id).first()
-        if not item:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-    return item
+    item = db.query(model.OrderDetail).filter(model.OrderDetail.id == item_id).first()
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+
+    calculated_price = item.price
+
+    return {
+        "id": item.id,
+        "order_id": item.order_id,
+        "sandwich_id": item.sandwich_id,
+        "amount": item.amount,
+        "price": calculated_price,  # include calculated price in the response
+    }
 
 
 def update(db: Session, item_id, request):

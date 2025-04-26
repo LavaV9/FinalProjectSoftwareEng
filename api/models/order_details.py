@@ -13,3 +13,9 @@ class OrderDetail(Base):
 
     sandwich = relationship("Sandwich", back_populates="order_details")
     order = relationship("Order", back_populates="order_details")
+
+    @property
+    def price(self):
+        if self.sandwich:
+            return float(self.sandwich.price) * self.amount
+        return 0.0

@@ -13,8 +13,8 @@ class Order(Base):
     status = Column(String(50), nullable=False, default="pending")
     description = Column(String(50), nullable=False, default="no Description")
     tracking_number = Column(Integer, nullable=True)
-    total_price = Column(DECIMAL(10, 2), nullable=False, default=0.00)
 
     customers = relationship("Customers", back_populates="orders")
     order_details = relationship("OrderDetail", back_populates="order")
     payments = relationship("Payments", uselist=False, back_populates="order")
+
