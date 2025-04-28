@@ -5,23 +5,33 @@ from .resources import Resource
 from .sandwiches import Sandwich
 
 
-class RecipeBase(BaseModel):
-    amount: int
+class MenuBase(BaseModel):
+    sandwich_name: str
+    ingredients: Optional[list] = None
+    price: int
+    calories: int
+    food_category: str
 
 
-class RecipeCreate(RecipeBase):
+class MenuCreate(MenuBase):
     sandwich_id: int
     resource_id: int
 
-class RecipeUpdate(BaseModel):
+class MenuUpdate(BaseModel):
+    sandwich_name: str
+    ingredients: Optional[list] = None
+    price: int
+    calories: int
+    food_category: str
     sandwich_id: Optional[int] = None
     resource_id: Optional[int] = None
     amount: Optional[int] = None
 
-class Recipe(RecipeBase):
+class Menu(MenuBase):
     id: int
     sandwich: Sandwich = None
     resource: Resource = None
+    ingredients: Optional[list] = None
 
     class ConfigDict:
         from_attributes = True

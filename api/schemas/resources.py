@@ -9,7 +9,8 @@ class ResourceBase(BaseModel):
 
 
 class ResourceCreate(ResourceBase):
-    pass
+    resource_id: int
+
 
 
 class ResourceUpdate(BaseModel):

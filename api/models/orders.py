@@ -8,11 +8,13 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    customer_id = Column(Integer, ForeignKey("customers.id")) #don't touch
+    customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False) #don't touch
     order_date = Column(DateTime, nullable=False, default=datetime.utcnow)
     status = Column(String(50), nullable=False, default="pending")
+    description = Column(String(50), nullable=False, default="no Description")
+    tracking_number = Column(Integer, nullable=True)
 
-
-    customers = relationship("Customers", back_populates="orders") # relationship with customers table
+    customers = relationship("Customers", back_populates="orders")
     order_details = relationship("OrderDetail", back_populates="order")
-    payments = relationship("Payments", uselist=False, back_populates="order") # relationship with payment table
+    payments = relationship("Payments", uselist=False, back_populates="order")
+
