@@ -8,9 +8,10 @@ class Rating(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     customer_id = Column(Integer, ForeignKey("customers.id"))
-    menu_item_id = Column(Integer, ForeignKey("menu_items.id"), nullable=True)
+    sandwich_id = Column(Integer, ForeignKey("sandwiches.id"), nullable=True)
     review = Column(String(500))
     score = Column(Integer)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+    sandwich = relationship("Sandwich", back_populates="ratings")
 

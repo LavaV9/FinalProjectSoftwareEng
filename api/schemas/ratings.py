@@ -5,7 +5,7 @@ from typing import Optional
 
 class RatingBase(BaseModel):
     customer_id: int
-    menu_item_id: Optional[int] = None
+    sandwich_id: Optional[int] = None
     review: str
     score: int
 

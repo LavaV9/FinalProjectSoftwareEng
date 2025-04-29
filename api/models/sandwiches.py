@@ -13,6 +13,7 @@ class Sandwich(Base):
     resource_amount = Column(Integer, nullable=False, default=1)
 
     resource = relationship("Resource", back_populates="sandwiches")
+    ratings = relationship("Rating", back_populates="sandwich")
 
     menu = relationship("Menu", back_populates="sandwich")
     order_details = relationship("OrderDetail", back_populates="sandwich")
